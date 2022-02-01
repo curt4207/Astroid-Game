@@ -35,6 +35,7 @@ class Player{
             ctx.fill();
         }
         update(){
+            this.draw();
             this.x = this.x + this.velocity.x;
             this.y = this.y + this.velocity.y;
         }
@@ -44,7 +45,7 @@ const x = canvas.width/2;
 const y = canvas.height/2;
 
 const player = new Player(x, y, 50, "green");
-player.drawPlayer();
+
  
 const projectile = new Projectile(
     canvas.width/2, 
@@ -52,23 +53,52 @@ const projectile = new Projectile(
     5, "red", {
         x: 1,
         y: 1
-    });
+    }
+);
+const projectile2 = new Projectile(
+    canvas.width/2,
+    canvas.height/2,
+    5,
+    "purple", {
+        x: -1,
+        y: -1
+    }
+);
+
+const projectiles = [];
 
 function animate(){
-    
     requestAnimationFrame(animate);
-    // console.log("go")
-    projectile.draw();
-    projectile.update();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    player.drawPlayer();
+    projectiles.forEach(projectile =>{
+        projectile.update();
+    })
 }
 
 window.addEventListener("click", (event)=>{
-    console.log(event.clientX);
-    console.log(event.clientY);
-    
+    const angle = Math.atan2(
+        event.clientY - canvas.height/2, 
+        event.clientX - canvas.width/2);
+   
+    const velocity = {
+        x: Math.cos(angle),
+        y: Math.sin(angle)
+    }
+
+    console.log(angle);
+    // console.log(event.clientY);
+  projectiles.push(
+      new Projectile(
+          canvas.width/2,
+         canvas.height/2, 
+         5, 
+         "red",
+        velocity)
+  )  
 
     
 });
 
 animate();
-console.log(projectile);
+// console.log(projectile);
